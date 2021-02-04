@@ -1,0 +1,47 @@
+#!/bin/sh
+# kFreeBSD do not accept scripts as interpreters, using #!/bin/sh and sourcing.
+if [ true != "$INIT_D_SCRIPT_SOURCED" ] ; then
+    set "$0" "$@"; INIT_D_SCRIPT_SOURCED=true . /lib/init/init-d-script
+fi
+### BEGIN INIT INFO
+# Provides:          skeleton
+# Required-Start:    $remote_fs $syslog
+# Required-Stop:     $remote_fs $syslog
+# Default-Start:     2 3 4 5
+# Default-Stop:      0 1 6
+# Short-Description: Example initscript
+# Description:       This file should be used to construct scripts to be
+#                    placed in /etc/init.d.  This example start a
+#                    single forking daemon capable of writing a pid
+#                    file.  To get other behavoirs, implemend
+#                    do_start(), do_stop() or other functions to
+#                    override the defaults in /lib/init/init-d-script.
+### END INIT INFO
+
+# Author: Max Loxton <max.loxton@bigpond.com>
+#
+
+DESC="mpd client for volumio to control amplifier with lirc emitter"
+
+
+# Carry out specific functions when asked to by the system
+case "$1" in
+  start)
+    echo "Starting  mpdclient"
+    # run application you want to start
+    cd /usr/local/bin/
+    python /usr/local/bin/mpdclient.py &
+    ;;
+  stop)
+    echo "Stopping mpdclient"
+    # kill application you want to stop
+    pkill -f  "/usr/local/bin/mpdclient.py"
+    ;;
+  *)
+    echo "Usage: /etc/init.d/mpdclient {start|stop}"
+    exit 1
+    ;;
+esac
+
+exit 0
+
